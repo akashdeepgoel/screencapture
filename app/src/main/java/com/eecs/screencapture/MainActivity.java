@@ -29,17 +29,5 @@ public class MainActivity extends Activity {
 
 
     }
-    public boolean doesPackageExist(String targetPackage) {
-
-        PackageManager pm = getPackageManager();
-        try {
-            PackageInfo info = pm.getPackageInfo(targetPackage, PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-        return true;
-    }
-
-
 
 }
