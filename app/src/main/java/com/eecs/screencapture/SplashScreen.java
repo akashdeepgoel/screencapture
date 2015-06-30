@@ -11,7 +11,7 @@ import android.view.WindowManager;
 
 public class SplashScreen extends Activity {
 
-    private final int SPLASH_DISPLAY_TIME = 3000;
+    private final int SPLASH_DISPLAY_TIME = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
