@@ -13,21 +13,22 @@ import android.widget.Button;
 
 
 public class MainActivity extends Activity {
-    Button b1;
+
+    private Button viewScreenshots;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        viewScreenshots = (Button) findViewById(R.id.viewScreenshots);
+        viewScreenshots.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivity(intent);
+            }
+        });
     }
-    public void b1OnClick(View v)
-    {
-        Button button = (Button) v;
-        //button.setText("Hello");
-        Intent intent =  new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivity(intent);
-
-
-    }
-
 }
