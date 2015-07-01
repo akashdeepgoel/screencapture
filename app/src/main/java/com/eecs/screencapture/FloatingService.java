@@ -4,7 +4,9 @@ package com.eecs.screencapture;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.os.IBinder;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,18 +20,22 @@ public class FloatingService extends Service{
     private WindowManager               windowManager;
     private ImageView                   floatingHead;
     private WindowManager.LayoutParams  layoutParams;
+    private Display                     display;
+    private Point                       screenSize = new Point(0,0);
 
 
     @Override
     public void onCreate() {
         super.onCreate();
         windowManager           = (WindowManager) getSystemService(WINDOW_SERVICE);
+        display                 = windowManager.getDefaultDisplay();
+        display.getSize(screenSize);
 
         floatingHead            = new ImageView(this);
         floatingHead.setBackgroundResource(R.mipmap.floating_head);
 
         layoutParams            = new WindowManager.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,   ViewGroup.LayoutParams.WRAP_CONTENT,
+                (int)Math.sqrt(screenSize.x*screenSize.y/100*Math.PI), (int)Math.sqrt(screenSize.x*screenSize.y/100*Math.PI),
                 WindowManager.LayoutParams.TYPE_PHONE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
