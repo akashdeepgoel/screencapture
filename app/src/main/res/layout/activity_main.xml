@@ -12,8 +12,7 @@
         android:layout_height   ="wrap_content"
 
         android:text            ="@string/viewScreenshots"
-        android:layout_centerInParent="true"
-        android:layout_above    ="@id/showScreenShotHead"/>
+        android:layout_centerInParent="true"/>
 
 
     <Button
@@ -22,7 +21,8 @@
         android:layout_height   ="wrap_content"
 
         android:text            ="@string/showScreenShotHead"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:layout_below    ="@id/viewScreenshots"/>
 
 
     <Button
