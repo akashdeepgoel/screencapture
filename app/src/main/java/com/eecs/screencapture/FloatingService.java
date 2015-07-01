@@ -3,15 +3,23 @@ package com.eecs.screencapture;
 
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 public class FloatingService extends Service{
@@ -82,10 +90,8 @@ public class FloatingService extends Service{
                         if (flagY||flagX) {
                             return true;
                         } else {
-                            Intent intent = new Intent(Intent.ACTION_PICK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.setType("image/*");
-                            startActivity(intent);
+                            Bitmap bitmap = takeScreenshot();
+                            saveBitmap(bitmap);
                         }
                     case MotionEvent.ACTION_MOVE:
                         layoutParams.x = initialX
@@ -108,10 +114,33 @@ public class FloatingService extends Service{
         if (floatingHead != null)
             windowManager.removeView(floatingHead);
     }
+    public Bitmap takeScreenshot() {
+        View rootView = findViewById(android.R.id.content).getRootView();
+        rootView.setDrawingCacheEnabled(true);
+        return rootView.getDrawingCache();
+    }
 
+    public void saveBitmap(Bitmap bitmap) {
+        File imagePath = new File(Environment.getExternalStorageDirectory() + "/screenshot.png");
+        FileOutputStream fos;
+        try {
+            fos = new FileOutputStream(imagePath);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.e("GREC", e.getMessage(), e);
+        } catch (IOException e) {
+            Log.e("GREC", e.getMessage(), e);
+        }
+    }
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+
 }
+
