@@ -71,6 +71,14 @@ public class FloatingService extends Service{
 
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (floatingHead != null)
+            windowManager.removeView(floatingHead);
+    }
+
+
+    @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
