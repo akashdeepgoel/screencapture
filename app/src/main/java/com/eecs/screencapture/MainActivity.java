@@ -15,6 +15,8 @@ import android.widget.Button;
 public class MainActivity extends Activity {
 
     private Button viewScreenshots;
+    private Button showScreenShotHead;
+    private Button hideScreenShotHead;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,22 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivity(intent);
+            }
+        });
+
+        showScreenShotHead = (Button) findViewById(R.id.showScreenShotHead);
+        showScreenShotHead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startService(new Intent(getApplication(), FloatingService.class));
+            }
+        });
+
+        hideScreenShotHead = (Button) findViewById(R.id.hideScreenShotHead);
+        hideScreenShotHead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopService(new Intent(getApplication(), FloatingService.class));
             }
         });
     }

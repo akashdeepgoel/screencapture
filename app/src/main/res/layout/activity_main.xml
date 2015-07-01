@@ -12,6 +12,25 @@
         android:layout_height   ="wrap_content"
 
         android:text            ="@string/viewScreenshots"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"/>
 
+
+    <Button
+        android:id              ="@+id/showScreenShotHead"
+        android:layout_width    ="wrap_content"
+        android:layout_height   ="wrap_content"
+
+        android:text            ="@string/showScreenShotHead"
+        android:layout_centerInParent="true"
+        android:layout_below    ="@id/viewScreenshots"/>
+
+
+    <Button
+        android:id              ="@+id/hideScreenShotHead"
+        android:layout_width    ="wrap_content"
+        android:layout_height   ="wrap_content"
+
+        android:text            ="@string/hideScreenShotHead"
+        android:layout_centerInParent="true"
+        android:layout_below    ="@id/showScreenShotHead"/>
 </RelativeLayout>

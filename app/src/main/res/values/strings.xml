@@ -5,4 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
     <string name="viewScreenshots">VIEW SCREENSHOTS</string>
+    <string name="hideScreenShotHead">Hide Screenshot Head</string>
+    <string name="showScreenShotHead">Show Screenshot Head</string>
 </resources>
