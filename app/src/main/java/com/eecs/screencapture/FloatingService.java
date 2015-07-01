@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,18 +44,49 @@ public class FloatingService extends Service{
             private int initialY;
             private float initialTouchX;
             private float initialTouchY;
+            private int finalTouchX;
+            private int differenceX;
+            private int differenceY;
+            private int initialXSpecial;
+            private int initialYSpecial;
+            private int finalTouchY;
+            private boolean flagY;
+            private boolean flagX;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                flagX=true;
+                flagY=true;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         initialX = layoutParams.x;
                         initialY = layoutParams.y;
                         initialTouchX = event.getRawX();
                         initialTouchY = event.getRawY();
+                        initialXSpecial=(int)event.getX();
+                        initialYSpecial=(int)event.getY();
                         return true;
                     case MotionEvent.ACTION_UP:
-                        return true;
+                        finalTouchX = (int) event.getX();
+                        finalTouchY = (int) event.getY();
+                        differenceX = finalTouchX - initialXSpecial;
+                        differenceY = finalTouchY - initialYSpecial;
+                        if(differenceY==0)
+                        {
+                            flagY=false;
+                        }
+                        if(differenceX==0)
+                        {
+                            flagX=false;
+                        }
+                        if (flagY||flagX) {
+                            return true;
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_PICK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.setType("image/*");
+                            startActivity(intent);
+                        }
                     case MotionEvent.ACTION_MOVE:
                         layoutParams.x = initialX
                                 + (int) (event.getRawX() - initialTouchX);
