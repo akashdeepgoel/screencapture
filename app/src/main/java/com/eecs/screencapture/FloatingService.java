@@ -53,7 +53,7 @@ public class FloatingService extends Service{
 
         dismissBinParams.gravity        = Gravity.TOP | Gravity.LEFT;
         dismissBinParams.x              = screenSize.x / 2 - 50;
-        dismissBinParams.y              = screenSize.y + 200;
+        dismissBinParams.y              = screenSize.y - 100;
 
 
         floatingHead.setOnTouchListener(new View.OnTouchListener() {
@@ -70,9 +70,15 @@ public class FloatingService extends Service{
                         initialY = floatingHeadParams.y;
                         initialTouchX = event.getRawX();
                         initialTouchY = event.getRawY();
+
+                        windowManager.addView(dismissBin, dismissBinParams);
                         return true;
                     case MotionEvent.ACTION_UP:
+                        windowManager.removeView(dismissBin);
 
+                        if(distanceBetweenHeads() <= 80) {
+                            stopSelf();
+                        }
                         return true;
                     case MotionEvent.ACTION_MOVE:
                         floatingHeadParams.x = initialX
@@ -87,7 +93,6 @@ public class FloatingService extends Service{
             }
         });
         windowManager.addView(floatingHead, floatingHeadParams);
-        windowManager.addView(dismissBin, dismissBinParams);
     }
 
 
@@ -96,12 +101,19 @@ public class FloatingService extends Service{
         super.onDestroy();
         if (floatingHead != null)
             windowManager.removeView(floatingHead);
-            windowManager.removeView(dismissBin);
     }
 
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+
+    public int distanceBetweenHeads() {
+        int distance = (int) Math.sqrt((dismissBinParams.x - floatingHeadParams.x)*(dismissBinParams.x - floatingHeadParams.x) +
+                (dismissBinParams.y - floatingHeadParams.y)*(dismissBinParams.y - floatingHeadParams.y));
+
+        return distance;
     }
 }
