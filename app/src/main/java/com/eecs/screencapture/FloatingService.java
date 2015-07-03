@@ -6,16 +6,24 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.facebook.rebound.SimpleSpringListener;
+import com.facebook.rebound.Spring;
+import com.facebook.rebound.SpringConfig;
+import com.facebook.rebound.SpringSystem;
+
 
 public class FloatingService extends Service{
+
+    private final int                   TENSION = 400;
+    private final int                   FRICTION = 10;
 
     private WindowManager               windowManager;
     private ImageView                   floatingHead;
@@ -26,6 +34,8 @@ public class FloatingService extends Service{
     private ImageView                   dismissBin;
     private WindowManager.LayoutParams  dismissBinParams;
 
+    private SpringSystem                springSystem;
+    private Spring                      floatingHeadSpring;
 
     @Override
     public void onCreate() {
@@ -44,6 +54,21 @@ public class FloatingService extends Service{
         floatingHeadParams.x            = 0;
         floatingHeadParams.y            = 100;
 
+        springSystem                    = SpringSystem.create();
+        floatingHeadSpring              = springSystem.createSpring();
+
+        floatingHeadSpring.addListener(new SimpleSpringListener() {
+            @Override
+            public void onSpringUpdate(Spring spring) {
+                float value = (float) spring.getCurrentValue();
+                float scale = 1f - (value * 0.5f);
+                floatingHead.setScaleX(scale);
+                floatingHead.setScaleY(scale);
+            }
+        });
+
+        SpringConfig floatingHeadConfig = new SpringConfig(TENSION, FRICTION);
+        floatingHeadSpring.setSpringConfig(floatingHeadConfig);
 
         dismissBin                      = new ImageView(this);
         dismissBin.setBackgroundResource(R.mipmap.dismiss_button);
@@ -71,11 +96,13 @@ public class FloatingService extends Service{
                         initialTouchX = event.getRawX();
                         initialTouchY = event.getRawY();
 
+                        floatingHeadSpring.setEndValue(1f);
                         windowManager.addView(dismissBin, dismissBinParams);
                         return true;
                     case MotionEvent.ACTION_UP:
                         windowManager.removeView(dismissBin);
 
+                        floatingHeadSpring.setEndValue(0f);
                         if(distanceBetweenHeads() <= 80) {
                             stopSelf();
                         }
